@@ -2,8 +2,8 @@ package com.example.jsonplaceholderapi.repository
 
 import com.example.jsonplaceholderapi.model.PostsItem
 import com.example.jsonplaceholderapi.network.JsonPlaceHolderApi
-import com.example.jsonplaceholderapi.network.JsonPlaceHolderWebService
 import com.example.jsonplaceholderapi.util.ResponseFileReader
+import com.example.jsonplaceholderapi.util.ResultState
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.runBlocking
@@ -11,8 +11,6 @@ import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
-import okio.buffer
-import okio.source
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -20,7 +18,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 
@@ -51,7 +48,7 @@ class PostRepositoryImplTest {
         mockWebServer.shutdown()
     }
 
-/*    @Test
+    @Test
     fun `given list of posts check for equality`() {
         val reader = ResponseFileReader("get_posts.json")
         val gson = Gson()
@@ -67,11 +64,12 @@ class PostRepositoryImplTest {
         }
 
         runBlocking {
-            val actual: ArrayList<PostsItem> = objectUnderTest.getPosts()
+            val posts: ResultState<ArrayList<PostsItem>> = objectUnderTest.getPosts()
+            val actualResult = posts.extractData
 
-            assertEquals(expected, actual)
+            assertEquals(expected, actualResult)
         }
-    }*/
+    }
 
     @Test
     fun `given posts item by id check for equality`() {

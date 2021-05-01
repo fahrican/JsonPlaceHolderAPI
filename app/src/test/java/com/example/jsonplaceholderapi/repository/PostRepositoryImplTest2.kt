@@ -4,21 +4,15 @@ import com.example.jsonplaceholderapi.model.PostsItem
 import com.example.jsonplaceholderapi.network.JsonPlaceHolderApi
 import com.example.jsonplaceholderapi.network.JsonPlaceHolderWebService
 import com.example.jsonplaceholderapi.util.ResponseFileReader
+import com.example.jsonplaceholderapi.util.ResultState
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runBlockingTest
-import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import okhttp3.mockwebserver.RecordedRequest
 import okio.buffer
 import okio.source
-import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -61,18 +55,19 @@ class PostRepositoryImplTest2 {
             )
         }
     }
-/*
+
     @Test
     fun `given list of posts check for equality`() = runBlocking {
-        val actual: ArrayList<PostsItem> = objectUnderTest.getPosts()
+        val result: ResultState<ArrayList<PostsItem>> = objectUnderTest.getPosts()
+        val actualData = result.extractData
 
         val reader = ResponseFileReader("get_posts.json")
         val gson = Gson()
         val postsListType = object : TypeToken<ArrayList<PostsItem>?>() {}.type
         val expected: ArrayList<PostsItem> = gson.fromJson(reader.content, postsListType)
 
-        assertEquals(expected, actual)
-    }*/
+        assertEquals(expected, actualData)
+    }
 
 
     @Test
