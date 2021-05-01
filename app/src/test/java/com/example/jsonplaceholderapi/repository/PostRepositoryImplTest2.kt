@@ -61,7 +61,7 @@ class PostRepositoryImplTest2 {
             )
         }
     }
-
+/*
     @Test
     fun `given list of posts check for equality`() = runBlocking {
         val actual: ArrayList<PostsItem> = objectUnderTest.getPosts()
@@ -72,7 +72,7 @@ class PostRepositoryImplTest2 {
         val expected: ArrayList<PostsItem> = gson.fromJson(reader.content, postsListType)
 
         assertEquals(expected, actual)
-    }
+    }*/
 
 
     @Test

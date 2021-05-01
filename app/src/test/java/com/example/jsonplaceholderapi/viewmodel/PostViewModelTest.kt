@@ -3,13 +3,11 @@ package com.example.jsonplaceholderapi.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.jsonplaceholderapi.TestCoroutineRule
-import com.example.jsonplaceholderapi.common.Resource
 import com.example.jsonplaceholderapi.model.PostsItem
 import com.example.jsonplaceholderapi.repository.PostRepository
-import com.example.jsonplaceholderapi.ui.StatusViewState
-import io.mockk.*
-import io.mockk.impl.annotations.MockK
+import com.example.jsonplaceholderapi.util.ResultState
 import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
 import org.junit.Before
@@ -18,6 +16,9 @@ import org.junit.Test
 import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.MockitoAnnotations
 
 @ExperimentalCoroutinesApi
 @RunWith(JUnit4::class)
@@ -29,24 +30,44 @@ class PostViewModelTest {
     @get:Rule
     val testCoroutineRule = TestCoroutineRule()
 
-    @MockK
+    @Mock
     lateinit var mockRepo: PostRepository
 
-    @MockK
-    lateinit var responseObserver: Observer<ArrayList<PostsItem>>
+    @Mock
+    lateinit var responseObserver: Observer<ResultState<ArrayList<PostsItem>>>
 
-    private lateinit var objectUnderTest: PostViewModel
+    lateinit var objectUnderTest: PostViewModel
 
     @Before
     fun setUp() {
-        MockKAnnotations.init(this)
+        MockitoAnnotations.initMocks(this)
 
         objectUnderTest = PostViewModel(mockRepo)
     }
 
+
     @After
     fun tearDown() {
+        objectUnderTest.posts.removeObserver(responseObserver)
     }
+
+    @Test
+    fun `when fetching results ok then return a list successfully`() {
+        val emptyList = arrayListOf<PostsItem>()
+        testCoroutineRule.runBlockingTest {
+            objectUnderTest.posts.observeForever(responseObserver)
+
+            Mockito.`when`(mockRepo.getPosts()).thenAnswer {
+                ResultState.Success(emptyList)
+            }
+
+            objectUnderTest.fetchPosts()
+
+            assertNotNull(objectUnderTest.posts.value)
+            assertEquals(ResultState.Success(emptyList), objectUnderTest.posts.value)
+        }
+    }
+
 
     /*
        @Test

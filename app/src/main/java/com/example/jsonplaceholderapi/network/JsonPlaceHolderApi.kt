@@ -1,6 +1,7 @@
 package com.example.jsonplaceholderapi.network
 
 import com.example.jsonplaceholderapi.model.PostsItem
+import retrofit2.Response
 import retrofit2.http.*
 
 interface JsonPlaceHolderApi {
@@ -10,7 +11,7 @@ interface JsonPlaceHolderApi {
     }
 
     @GET("posts")
-    suspend fun getPosts(): ArrayList<PostsItem>
+    suspend fun getPosts(): Response<ArrayList<PostsItem>>
 
     @GET("posts/{id}")
     suspend fun getPostById(@Path("id") id: Int): PostsItem

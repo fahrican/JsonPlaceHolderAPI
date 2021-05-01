@@ -1,5 +1,6 @@
 package com.example.jsonplaceholderapi.di
 
+import com.example.jsonplaceholderapi.repository.BaseRepository
 import com.example.jsonplaceholderapi.repository.PostRepository
 import com.example.jsonplaceholderapi.repository.PostRepositoryImpl
 import dagger.Binds
