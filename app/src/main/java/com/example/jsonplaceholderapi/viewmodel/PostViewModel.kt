@@ -41,7 +41,7 @@ class PostViewModel @Inject constructor(
 
     }
 
-    fun fetchPostById(id: Int) = viewModelScope.launch {
+ /*   fun fetchPostById(id: Int) = viewModelScope.launch {
         try {
             val response = repository.getPostById(id)
             Log.d("fetchPostById()", "response: ${response}")
@@ -75,5 +75,5 @@ class PostViewModel @Inject constructor(
         } catch (t: Throwable) {
             Log.e("updatePostById()", "catch block: ${t.message}")
         }
-    }
+    }*/
 }
