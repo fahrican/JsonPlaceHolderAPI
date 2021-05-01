@@ -15,13 +15,15 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
 import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
+import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
+import org.mockito.junit.MockitoJUnitRunner
+import retrofit2.HttpException
 
 @ExperimentalCoroutinesApi
-@RunWith(JUnit4::class)
+@RunWith(MockitoJUnitRunner::class)
 class PostViewModelTest {
 
     @get:Rule
@@ -45,11 +47,23 @@ class PostViewModelTest {
         objectUnderTest = PostViewModel(mockRepo)
     }
 
-
     @After
     fun tearDown() {
         objectUnderTest.posts.removeObserver(responseObserver)
     }
+
+
+    @Test
+    fun `when calling for results then return loading`() {
+        testCoroutineRule.runBlockingTest {
+            objectUnderTest.posts.observeForever(responseObserver)
+
+            objectUnderTest.fetchPosts()
+
+            Mockito.verify(responseObserver).onChanged(ResultState.InProgress)
+        }
+    }
+
 
     @Test
     fun `when fetching results ok then return a list successfully`() {
@@ -68,74 +82,20 @@ class PostViewModelTest {
         }
     }
 
-
-    /*
-       @Test
-       fun `when fetch posts exectuted then check for`() {
-           val emptyList = ArrayList<PostsItem>()
-           testCoroutineRule.runBlockingTest {
-
-               objectUnderTest.posts.observeForever(responseObserver)
-
-               objectUnderTest.fetchPosts()
-
-               val test = objectUnderTest.posts.getOrAwaitValueTest()
-
-               assertNotNull(objectUnderTest.posts.value)
-               //assertNotNull(test)
-               //assertEquals(Result.Success(emptyList), viewModel.getPhotos().value)
-           }
-       }
-
-        @Test
-          fun givenServerResponse200_whenFetch_shouldReturnSuccess() {
-              testCoroutineRule.runBlockingTest {
-
-                  doReturn(ArrayList<PostsItem>())
-                      .`when`(mockRepo)
-                      .getPosts()
-
-                  val viewModel = PostViewModel(mockRepo)
-
-                  viewModel.posts.observeForever(apiUsersObserver)
-
-                  verify(mockRepo).getPosts()
-
-                  verify(apiUsersObserver).onChanged(ArrayList<PostsItem>())
-
-                  viewModel.posts.removeObserver(apiUsersObserver)
-              }
-          }
-
-
     @Test
-    fun `given succcess state, when fetchMovies called, then isLoading return false`() {
-        // Given
-        val mockedObserver = createObserver()
-        objectUnderTest.status.observeForever(mockedObserver)
-        val resource = Resource.Success(ArrayList<PostsItem>())
+    fun `when fetching results fails then return an error`() {
+        val exception = Mockito.mock(HttpException::class.java)
+        testCoroutineRule.runBlockingTest {
+            objectUnderTest.posts.observeForever(responseObserver)
 
-        coEvery { mockRepo.getPosts() } returns resource.data
+            Mockito.`when`(mockRepo.getPosts()).thenAnswer {
+                ResultState.Error(exception)
+            }
 
-        // When
-        objectUnderTest.fetchPosts()
+            objectUnderTest.fetchPosts()
 
-        // Then
-        val viewStateSlots = mutableListOf<StatusViewState>()
-        verify { mockedObserver.onChanged(capture(viewStateSlots)) }
-
-        // Then
-        val slot = slot<StatusViewState>()
-        verify { mockedObserver.onChanged(capture(slot)) }
-
-        assertEquals(false, slot.captured.isLoading())
-
-        verify { objectUnderTest.fetchPosts() }
+            assertNotNull(objectUnderTest.posts.value)
+            assertEquals(ResultState.Error(exception), objectUnderTest.posts.value)
+        }
     }
-
-    private fun createObserver(): Observer<StatusViewState> = spyk(Observer { })
-
-     */
-
-
 }

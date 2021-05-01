@@ -3,13 +3,11 @@ package com.example.jsonplaceholderapi.viewmodel
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.jsonplaceholderapi.model.PostsItem
-import com.example.jsonplaceholderapi.repository.BaseRepository
 import com.example.jsonplaceholderapi.repository.PostRepository
 import com.example.jsonplaceholderapi.util.ResultState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
@@ -34,7 +32,7 @@ class PostViewModel @Inject constructor(
                         Log.d("fetchPosts()", "response: ${response}")
                     }
                     else -> {
-                        _posts.postValue(ResultState.Error(Exception()))
+                        _posts.postValue(postList)
                         Log.e("fetchPosts()", "catch block")
                     }
                 }
