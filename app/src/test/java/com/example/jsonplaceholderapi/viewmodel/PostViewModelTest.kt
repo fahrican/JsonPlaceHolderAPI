@@ -31,12 +31,12 @@ class PostViewModelTest {
     val testCoroutineRule = TestCoroutineRule()
 
     @Mock
-    lateinit var mockRepo: PostRepository
+    private lateinit var mockRepo: PostRepository
 
     @Mock
-    lateinit var responseObserver: Observer<ResultState<ArrayList<PostsItem>>>
+    private lateinit var responseObserver: Observer<ResultState<ArrayList<PostsItem>>>
 
-    lateinit var objectUnderTest: PostViewModel
+    private lateinit var objectUnderTest: PostViewModel
 
     @Before
     fun setUp() {
