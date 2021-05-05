@@ -39,42 +39,5 @@ class PostViewModel @Inject constructor(
                 }
             }
         }
-
     }
-
-    /*   fun fetchPostById(id: Int) = viewModelScope.launch {
-           try {
-               val response = repository.getPostById(id)
-               Log.d("fetchPostById()", "response: ${response}")
-           } catch (t: Throwable) {
-               Log.e("fetchPostById()", "catch block: ${t.message}")
-           }
-       }
-
-       fun createPostsItem(postsItem: PostsItem) = viewModelScope.launch {
-           try {
-               val response = repository.postPostsItem(postsItem)
-               Log.d("createPostsItem()", "response: ${response}")
-           } catch (t: Throwable) {
-               Log.e("createPostsItem()", "catch block: ${t.message}")
-           }
-       }
-
-       fun removePostById(id: Int) = viewModelScope.launch {
-           try {
-               val response = repository.deletePostById(id)
-               Log.d("removePostById()", "response: ${response}")
-           } catch (t: Throwable) {
-               Log.e("removePostById()", "catch block: ${t.message}")
-           }
-       }
-
-       fun updatePostById(id: Int, item: PostsItem) = viewModelScope.launch {
-           try {
-               val response = repository.putPostById(id, item)
-               Log.d("updatePostById()", "response: ${response}")
-           } catch (t: Throwable) {
-               Log.e("updatePostById()", "catch block: ${t.message}")
-           }
-       }*/
 }
