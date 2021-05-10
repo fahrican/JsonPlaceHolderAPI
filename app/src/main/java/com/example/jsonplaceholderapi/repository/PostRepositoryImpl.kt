@@ -4,7 +4,6 @@ import android.util.Log
 import com.example.jsonplaceholderapi.model.PostsItem
 import com.example.jsonplaceholderapi.network.JsonPlaceHolderApi
 import com.example.jsonplaceholderapi.util.ResultState
-import retrofit2.Call
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -25,7 +24,7 @@ class PostRepositoryImpl @Inject constructor(
                         responseErrorBody.response()?.code()?.let { errorCode ->
                             result = handleException(errorCode)
                         }
-                    } else result = handleException(BaseRepository.GENERAL_ERROR_CODE)
+                    } else result = handleException(GENERAL_ERROR_CODE)
                 }
             }
         } catch (error: HttpException) {

@@ -2,6 +2,8 @@ package com.example.jsonplaceholderapi.repository
 
 import com.example.jsonplaceholderapi.model.PostsItem
 import com.example.jsonplaceholderapi.network.JsonPlaceHolderApi
+import com.example.jsonplaceholderapi.repository.BaseRepository.Companion.GENERAL_ERROR_CODE
+import com.example.jsonplaceholderapi.repository.BaseRepository.Companion.SOMETHING_WRONG
 import com.example.jsonplaceholderapi.util.ResponseFileReader
 import com.example.jsonplaceholderapi.util.ResultState
 import com.google.gson.Gson
@@ -13,6 +15,7 @@ import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -172,6 +175,25 @@ class PostRepositoryImplTest {
             val actual: PostsItem = objectUnderTest.putPostById(4, item)
 
             assertEquals(expected, actual)
+        }
+    }
+
+
+    @Test
+    fun `given response failure when fetching results then return exception`() {
+        mockWebServer.apply {
+            enqueue(MockResponse().setResponseCode(GENERAL_ERROR_CODE))
+        }
+
+        runBlocking {
+            val apiResponse = objectUnderTest.getPosts()
+
+            assertNotNull(apiResponse)
+            val expectedValue = ResultState.Error(Exception(SOMETHING_WRONG))
+            assertEquals(
+                expectedValue.exception.message,
+                (apiResponse as ResultState.Error).exception.message
+            )
         }
     }
 }
